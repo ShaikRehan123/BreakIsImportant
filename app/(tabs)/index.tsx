@@ -3,6 +3,7 @@ import { Storage } from "expo-storage";
 import { useState, useEffect } from "react";
 import { Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import { commonStyles } from "../lib";
 
 export default function TabOneScreen() {
   const [jobs, setJobs] = useState<any>([]);
@@ -13,16 +14,16 @@ export default function TabOneScreen() {
     };
     getJobs();
   }, []);
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
 
   return (
     <View>
-      {jobs.map((job: any) => (
-        <Text>{job.title}</Text>
+      {jobs.map((job: any, i: number) => (
+        <Text key={i}>{job.title}</Text>
       ))}
       <View style={styles.addNewJobButtonContainer}>
         <Button
-          style={styles.addNewJobButton}
+          style={{ ...commonStyles.button }}
           mode="elevated"
           textColor="white"
           onPress={() => {
@@ -42,11 +43,5 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-  },
-  addNewJobButton: {
-    width: "100%",
-    backgroundColor: "#2f95dc",
-    color: "white",
-    marginTop: 20,
   },
 });
