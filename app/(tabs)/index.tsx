@@ -1,31 +1,52 @@
-import { StyleSheet } from 'react-native';
-
-import EditScreenInfo from '../../components/EditScreenInfo';
-import { Text, View } from '../../components/Themed';
+import { StyleSheet, View, Text } from "react-native";
+import { Storage } from "expo-storage";
+import { useState, useEffect } from "react";
+import { Button } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 
 export default function TabOneScreen() {
+  const [jobs, setJobs] = useState<any>([]);
+  useEffect(() => {
+    const getJobs = async () => {
+      const jobs = (await JSON.parse(await Storage.getItem("jobs"))) || [];
+      setJobs(jobs);
+    };
+    getJobs();
+  }, []);
+  const navigation = useNavigation();
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+    <View>
+      {jobs.map((job: any) => (
+        <Text>{job.title}</Text>
+      ))}
+      <View style={styles.addNewJobButtonContainer}>
+        <Button
+          style={styles.addNewJobButton}
+          mode="elevated"
+          textColor="white"
+          onPress={() => {
+            console.log("Pressed");
+            navigation.navigate("Add New Job");
+          }}
+        >
+          Add New Job
+        </Button>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+  addNewJobButtonContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+  addNewJobButton: {
+    width: "100%",
+    backgroundColor: "#2f95dc",
+    color: "white",
+    marginTop: 20,
   },
 });
